@@ -1,0 +1,48 @@
+html {
+	padding: 0;
+	margin: 0;
+	font-size: 10px;
+	font-family: sans-serif;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-size: 1.4rem;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+/*variables start*/
+
+@warning-color: #f44336;
+@main-background-color: #ffffcf;
+@secondaty-background-color: #949491;
+@controls-background: #fff59d;
+@hovered-controls-background: #ffd600;
+
+/*variables end*/
+
+/*mixins start*/
+
+.button(@shadowColor, @backgoundColor ) {
+	box-shadow: 0 0 2px @shadowColor;
+	border-radius: 5px;
+	border: none;
+	outline: none;
+	padding: 0.5rem;
+	cursor: pointer;
+	background-color: @backgoundColor;
+}
+
+.hovered-button (@backgroundColor,@shadowColor) {
+	&:hover,
+	&focus {
+		background-color: @backgroundColor;
+		box-shadow: 0 0 4px @shadowColor;
+	}
+}
+
+/*mixins end*/

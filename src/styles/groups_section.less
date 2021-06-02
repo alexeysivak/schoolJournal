@@ -1,0 +1,115 @@
+/*groups section start*/
+
+.groups__section {
+	height: 100vh;
+	width: 25%;
+	border-right: 1px solid #000;
+	background-color: @main-background-color;
+}
+
+.groups__search-block,
+.groups__controls-block {
+	height: 8vh;
+	width: 100%;
+	box-shadow: 0 0 2px #000;
+	background-color: @secondaty-background-color;
+}
+
+.groups__search-block {
+	border-bottom: 1px solid #000;
+	padding: 1rem 0 1rem 1rem;
+
+	.groups__search-input,
+	.groups__search-button {
+		border: none;
+		border-radius: 5px;
+		padding: 0.7rem;
+		outline: none;
+	}
+
+	.groups__search-input {
+		width: 66%;
+		margin-right: 5%;
+	}
+
+	.groups__search-button {
+		.button(#000,@controls-background);
+		width: 24%;
+		cursor: pointer;
+		padding: 0.7rem 0.5rem;
+
+		.hovered-button(@hovered-controls-background,@hovered-controls-background);
+	}
+}
+
+.groups__controls-block {
+	border-top: 1px solid #000;
+	padding: 1rem 0;
+}
+
+.groups-container {
+	height: 82vh;
+	margin: 1vh 0;
+	width: 100%;
+	padding: 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	overflow-y: scroll;
+
+	&::-webkit-scrollbar {
+		width: 0.3rem;
+		background-color: #ccc;
+	}
+
+	&::-webkit-scrollbar-track {
+		width: 0.3rem;
+		background-color: #ccc;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		width: 0.3rem;
+		background-color: rgb(136, 136, 136);
+
+		&:hover {
+			background-color: #000;
+		}
+	}
+}
+
+.groups__add-button {
+	.button(@controls-background,@controls-background);
+	display: block;
+	width: 80%;
+	margin: 0 auto;
+	padding: 0.7rem 0.5rem;
+
+	.hovered-button(@hovered-controls-background,@hovered-controls-background);
+}
+
+/*groups section end*/
+
+/*group start*/
+
+.groups__group {
+	padding: 1rem 0;
+	width: 100%;
+	border-bottom: 1px solid #000;
+	display: flex;
+	justify-content: space-between;
+	cursor: pointer;
+
+	span {
+		display: inline-block;
+		font-size: 2rem;
+	}
+}
+
+.groups__group-button {
+	.button(@warning-color, inherit);
+	width: 10%;
+	color: @warning-color;
+
+	.hovered-button(inherit, @warning-color);
+}
+
+/*group start end*/
