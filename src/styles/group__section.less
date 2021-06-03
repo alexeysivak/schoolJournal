@@ -1,0 +1,177 @@
+/* group start*/
+
+.group__section {
+	height: 100vh;
+	width: 75%;
+	background-color: @main-background-color;
+}
+
+/*group header start*/
+.group__header {
+	width: 100%;
+	height: 8vh;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: @secondaty-background-color;
+	padding: 0 1rem;
+}
+
+.group__info-block {
+	width: 12%;
+	color: #ffffcf;
+	font-weight: 700;
+	font-size: 2.5rem;
+}
+
+.group__search-block {
+	width: 60%;
+}
+
+.group__search-input {
+	width: 77%;
+	.input;
+}
+
+.group__search-button {
+	.button(#000,@controls-background);
+	width: 20%;
+	margin-left: 2%;
+	max-width: 8rem;
+	cursor: pointer;
+	padding: 0.7rem 0.5rem;
+
+	.hovered-button(@hovered-controls-background,@hovered-controls-background);
+}
+
+.group__controls-block {
+	width: 18%;
+}
+
+.group__add-button {
+	.button(#000,@controls-background);
+	width: 100%;
+	cursor: pointer;
+	padding: 0.7rem 0.5rem;
+
+	.hovered-button(@hovered-controls-background,@hovered-controls-background);
+}
+
+/*group header end*/
+
+/*group journal start*/
+.group__students-block {
+	height: 92vh;
+	overflow-y: scroll;
+
+	&::-webkit-scrollbar {
+		width: 0.5rem;
+		background-color: #ccc;
+	}
+
+	&::-webkit-scrollbar-track {
+		width: 0.5rem;
+		background-color: #ccc;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		width: 0.5rem;
+		background-color: rgb(136, 136, 136);
+
+		&:hover {
+			background-color: #000;
+		}
+	}
+}
+
+.group__titles {
+	width: 100%;
+	display: flex;
+	padding: 1rem;
+	border-bottom: 1px solid #000;
+
+	div {
+		text-align: center;
+
+		&:nth-child(1),
+		&:nth-child(2) {
+			border-right: 1px solid #000;
+		}
+	}
+}
+
+.group__student-name {
+	width: 25%;
+}
+
+.group__student-marks {
+	width: 45%;
+}
+
+.group__student-average {
+	width: 10%;
+}
+
+/*student start*/
+.student {
+	width: 100%;
+	display: flex;
+	padding: 1rem;
+
+	p {
+		text-align: center;
+		margin: 0;
+		padding: 0.7rem;
+
+		&:nth-child(1) {
+			width: 2%;
+		}
+		&:nth-child(2) {
+			width: 23%;
+			border-right: 1px solid #000;
+		}
+		&:nth-child(3) {
+			width: 45%;
+			border-right: 1px solid #000;
+		}
+		&:nth-child(4) {
+			width: 10%;
+			border-right: 1px solid #000;
+		}
+	}
+}
+
+.student__controls-block {
+	width: 20%;
+	padding: 0 2rem;
+	display: flex;
+	justify-content: space-between;
+}
+
+.student__mark-input {
+	.input;
+	&::-webkit-inner-spin-button {
+		appearance: none;
+		-moz-appearance: none;
+		-webkit-appearance: none;
+	}
+	width: 25%;
+	text-align: center;
+	box-shadow: 0 0 2px @secondaty-background-color;
+}
+
+.student__add-button {
+	.button(#000,@controls-background);
+	width: 60%;
+	margin-left: 5%;
+	cursor: pointer;
+	padding: 0.7rem;
+
+	.hovered-button(@hovered-controls-background,@hovered-controls-background);
+}
+
+/*student end*/
+
+/*group journal end*/
+
+/* group end*/

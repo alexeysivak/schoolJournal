@@ -28,7 +28,7 @@ body {
 /*mixins start*/
 
 .button(@shadowColor, @backgoundColor ) {
-	box-shadow: 0 0 2px @shadowColor;
+	box-shadow: 0 0 3px @shadowColor;
 	border-radius: 5px;
 	border: none;
 	outline: none;
@@ -39,10 +39,17 @@ body {
 
 .hovered-button (@backgroundColor,@shadowColor) {
 	&:hover,
-	&focus {
+	&:focus {
 		background-color: @backgroundColor;
-		box-shadow: 0 0 4px @shadowColor;
+		box-shadow: 0 0 5px @shadowColor;
 	}
 }
 
-/*mixins end*/
+.input {
+	border: none;
+	border-radius: 5px;
+	padding: 0.7rem;
+	outline: none;
+}
+
+/*mixins end*/ ;
