@@ -1,0 +1,99 @@
+.form-section {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.form {
+	width: 30%;
+	background-color: @secondaty-background-color;
+	border-radius: 10px;
+	padding: 0.5% 1.5% 1.5% 1.5%;
+	text-align: right;
+}
+
+.form__close-button {
+	border: none;
+	outline: none;
+	background-color: inherit;
+	color: @controls-background;
+	font-size: 2rem;
+	padding: 0 0 1.5%;
+	cursor: pointer;
+}
+
+.form-fieldset {
+	outline: none;
+	border: none;
+	width: 100%;
+	padding: 1rem 1rem 3rem;
+	background-color: @main-background-color;
+	border-radius: 10px;
+}
+
+.form-input {
+	.input;
+	border-bottom: 2px solid @secondaty-background-color;
+	border-radius: 0;
+	background-color: inherit;
+	width: 100%;
+	margin: 5% 0 2%;
+	font-size: 1.6rem;
+	color: @secondaty-background-color;
+
+	&::placeholder {
+		opacity: 0.5;
+		color: @secondaty-background-color;
+	}
+}
+.form__delete-button,
+.form__cancel-button,
+.form-button {
+	.button(#000, @controls-background);
+	display: block;
+	width: 100%;
+	margin: 5% auto 0;
+	cursor: pointer;
+	padding: 1rem;
+	font-size: 2rem;
+	border-radius: 10px;
+
+	.hovered-button(
+			@hovered-controls-background,
+			@hovered-controls-background
+		);
+}
+
+.form__delete-button {
+	display: inline-block;
+	width: 45%;
+	margin: 0;
+}
+
+.form__cancel-button {
+	display: inline-block;
+	width: 45%;
+	margin: 0 0 0 8%;
+}
+
+.form__confrimation-question {
+	background-color: @main-background-color;
+	padding: 1rem;
+	text-align: center;
+	font-size: 2rem;
+	border-radius: 10px;
+}
+
+.error-message {
+	color: @warning-color;
+	text-align: center;
+	margin: 0;
+}

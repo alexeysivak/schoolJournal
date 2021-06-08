@@ -1,10 +1,32 @@
 @import './common.less';
 @import './groups_section.less';
-@import './group__section.less';
+@import './group_section.less';
+@import './form_template.less';
 
 .main {
 	width: 100vw;
 	height: 100vh;
 	display: flex;
 	overflow: hidden;
+	position: relative;
+}
+
+@media screen and (max-width: 576px) {
+	.main {
+		flex-direction: column-reverse;
+		background-color: @main-background-color;
+
+		section {
+			width: 100%;
+
+			&:nth-child(1) {
+				max-height: 35vh;
+				z-index: 100;
+			}
+			&:nth-child(2) {
+				max-height: 64vh;
+				margin-top: 1vh;
+			}
+		}
+	}
 }
