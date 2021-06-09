@@ -10,6 +10,7 @@ import {
 	showAddStudentModal,
 	showForbiddanceModal,
 	showErrorModals,
+	clearModalErrors,
 } from '../views/groupsView';
 import JournalData from '../data/JournalData';
 import {
@@ -144,8 +145,9 @@ function addStudent(formData) {
 
 	const validationResult = validateStudentObject(newStudent);
 
+	clearModalErrors();
+
 	if (Object.getOwnPropertyNames(validationResult).length) {
-		
 		showErrorModals(validationResult);
 	}
 }

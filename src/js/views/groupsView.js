@@ -43,7 +43,7 @@ export function showForbiddanceModal() {
 }
 
 export function showErrorModals(validationResult) {
-	clearModalErrors();
+	
 	for (let key in validationResult) {
 		const errorField = document.querySelector(`[name = ${key}]`);
 
@@ -51,9 +51,9 @@ export function showErrorModals(validationResult) {
 	}
 }
 
-function clearModalErrors() {
+export function clearModalErrors() {
 	const errors = document.querySelectorAll('.error-message');
-
+	 
 	if (errors.length) {
 		Array.from(errors).forEach((error) => error.remove());
 	}

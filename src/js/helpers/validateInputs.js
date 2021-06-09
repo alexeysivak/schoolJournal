@@ -38,6 +38,10 @@ class StudentDataValidation {
 			return;
 		}
 
+		if (this.invalidFields[key]) {
+			delete this.invalidFields[key];
+		}
+
 		this.studentName = value.trim();
 	};
 
@@ -45,6 +49,10 @@ class StudentDataValidation {
 		if (!value.trim()) {
 			this.invalidFields[key] = nameError;
 			return;
+		}
+
+		if (this.invalidFields[key]) {
+			delete this.invalidFields[key];
 		}
 
 		this.studentSurname = value.trim();
@@ -57,6 +65,11 @@ class StudentDataValidation {
 
 		if (wrongToken.length) {
 			this.invalidFields[key] = marksError;
+			return;
+		}
+
+		if (this.invalidFields[key]) {
+			delete this.invalidFields[key];
 		}
 	};
 
