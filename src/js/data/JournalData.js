@@ -1,6 +1,7 @@
 export class JournalData {
 	constructor() {
 		this.data = [];
+		this.renderedGroupId = '';
 	}
 
 	deleteGroup(groupId) {

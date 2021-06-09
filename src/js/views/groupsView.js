@@ -2,8 +2,10 @@ import {
 	getGroupTemplate,
 	creationFormTemplate,
 	groupDeletionConfirmation,
+	addStudentFormTemplate,
+	addStudentForbiddanceTemplate,
 } from '../templates/temlates';
-import { mainContainer, groupsContainer } from '../main';
+import { mainContainer, groupsContainer, studentsContainer } from '../main';
 
 export function renderGroup(group) {
 	groupsContainer.insertAdjacentHTML('beforeend', getGroupTemplate(group));
@@ -11,6 +13,10 @@ export function renderGroup(group) {
 
 export function clearGroupsContainer() {
 	groupsContainer.innerHTML = null;
+}
+
+export function clearStunentsContainer() {
+	studentsContainer.innerHTML = null;
 }
 
 export function deleteGroupEl(groupId) {
@@ -23,6 +29,34 @@ export function deleteGroupEl(groupId) {
 
 export function showGroupNameModal() {
 	mainContainer.insertAdjacentHTML('beforeend', creationFormTemplate);
+}
+
+export function showAddStudentModal() {
+	mainContainer.insertAdjacentHTML('beforeend', addStudentFormTemplate);
+}
+
+export function showForbiddanceModal() {
+	mainContainer.insertAdjacentHTML(
+		'beforeend',
+		addStudentForbiddanceTemplate,
+	);
+}
+
+export function showErrorModals(validationResult) {
+	clearModalErrors();
+	for (let key in validationResult) {
+		const errorField = document.querySelector(`[name = ${key}]`);
+
+		errorField.insertAdjacentHTML('afterend', validationResult[key]);
+	}
+}
+
+function clearModalErrors() {
+	const errors = document.querySelectorAll('.error-message');
+
+	if (errors.length) {
+		Array.from(errors).forEach((error) => error.remove());
+	}
 }
 
 export function showConfirmationModal() {

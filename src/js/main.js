@@ -2,9 +2,11 @@ import '../styles/main.less';
 import {
 	init,
 	onGroupsContainerClick,
-	onAddGroupButtonClick,
+	onGroupAddButtonClick,
 	doSearch,
-} from './controllers/сontroller';
+	resetSearchResuts,
+	onStudentAddButtonClick,
+} from './controllers/controller';
 
 /**
  * DOM elements
@@ -12,13 +14,22 @@ import {
 export const mainContainer = document.getElementById('mainContainer');
 export const groupsContainer = document.getElementById('groupsContainer');
 export const studentsContainer = document.getElementById('studentsContainer');
-export const addGroupButton = document.getElementById('addGroupButton');
+
+const groupAddButton = document.getElementById('groupAddButton');
 const groupSearchForm = document.getElementById('groupSearchForm');
+const groupSearchInput = document.getElementById('groupSearchInput');
+const studentSearchForm = document.getElementById('studentSearchForm');
+const studentSearchInput = document.getElementById('studentSearchInput');
+const studentAddButton = document.getElementById('studentAddButton');
 
 /**
  * Event listeners binding
  */
 document.addEventListener('DOMContentLoaded', init);
 groupsContainer.addEventListener('click', onGroupsContainerClick);
-addGroupButton.addEventListener('click', onAddGroupButtonClick);
+groupAddButton.addEventListener('click', onGroupAddButtonClick);
 groupSearchForm.addEventListener('submit', doSearch);
+groupSearchInput.addEventListener('input', resetSearchResuts);
+studentSearchForm.addEventListener('submit', doSearch);
+studentSearchInput.addEventListener('input', resetSearchResuts);
+studentAddButton.addEventListener('click', onStudentAddButtonClick);
