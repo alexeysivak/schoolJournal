@@ -6,6 +6,7 @@ import {
 	doSearch,
 	resetSearchResuts,
 	onStudentAddButtonClick,
+	onStudentsContainerClick,
 } from './controllers/controller';
 
 /**
@@ -14,6 +15,7 @@ import {
 export const mainContainer = document.getElementById('mainContainer');
 export const groupsContainer = document.getElementById('groupsContainer');
 export const studentsContainer = document.getElementById('studentsContainer');
+export const groupInfoBlock = document.getElementById('groupInfoBlock');
 
 const groupAddButton = document.getElementById('groupAddButton');
 const groupSearchForm = document.getElementById('groupSearchForm');
@@ -33,3 +35,4 @@ groupSearchInput.addEventListener('input', resetSearchResuts);
 studentSearchForm.addEventListener('submit', doSearch);
 studentSearchInput.addEventListener('input', resetSearchResuts);
 studentAddButton.addEventListener('click', onStudentAddButtonClick);
+studentsContainer.addEventListener('click', onStudentsContainerClick);

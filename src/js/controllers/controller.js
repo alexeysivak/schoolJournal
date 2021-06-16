@@ -1,5 +1,9 @@
 import MockApi from '../MockApi';
-import { renderStudent } from '../views/groupView';
+import {
+	renderStudent,
+	reRenderStudent,
+	renderGroupInfo,
+} from '../views/groupView';
 import {
 	renderGroup,
 	deleteGroupEl,
@@ -11,6 +15,7 @@ import {
 	showForbiddanceModal,
 	showErrorModals,
 	clearModalErrors,
+	showStudentEditModal,
 } from '../views/groupsView';
 import JournalData from '../data/JournalData';
 import {
@@ -18,6 +23,11 @@ import {
 	validateStudentObject,
 } from '../helpers/validateInputs';
 import { showFormError, closeForm } from '../views/formsView';
+
+const GROUP_CLASS = 'groups__group';
+const GROUP_DELETE_BUTTON_CLASS = 'groups__delete-button';
+const STUDENT_DELETE_BUTTON_CLASS = 'student__delete-button';
+const STUDENT_CLASS = 'student';
 
 export async function init() {
 	await MockApi.groups.then((groups) => (JournalData.data = groups));
@@ -27,45 +37,52 @@ export async function init() {
 	});
 }
 
-export function onGroupsContainerClick(e) {
+export async function onGroupsContainerClick(e) {
 	e.stopPropagation();
 
-	const GROUP_CLASS = 'groups__group';
-	const GROUP_DELETE_BUTTON_CLASS = 'groups__delete-button';
+	if (e.target.classList.contains(GROUP_CLASS)) {
+		const targetId = e.target.dataset.id;
 
-	const target = e.target;
+		JournalData.setChosenGroupId(targetId);
 
-	if (target.classList.contains(GROUP_CLASS)) {
-		const targetId = target.dataset.id;
-		JournalData.renderedGroupId = targetId;
-		renderData(targetId);
+		await renderData();
+
+		showGroupInfo();
 	}
 
-	if (target.classList.contains(GROUP_DELETE_BUTTON_CLASS)) {
-		const targetId = target.closest('.groups__group').dataset.id;
+	if (e.target.classList.contains(GROUP_DELETE_BUTTON_CLASS)) {
+		const target = e.target;
 
-		confirmDeletion(targetId);
+		confirmDeletion(target, GROUP_CLASS);
 	}
 }
 
-async function renderData(targetId) {
-	const chosenGroup = JournalData.data.find((group) => group.id === targetId);
+function showGroupInfo() {
+	const averageMark = JournalData.getGroupAveregeMark();
+
+	renderGroupInfo(averageMark, JournalData.chosenGroup.name);
+}
+
+async function renderData() {
+	const chosenGroupId = JournalData.chosenGroupId;
+
+	const chosenGroup = JournalData.getChosenGroup();
 
 	if (!chosenGroup.students) {
-		const studentsData = await MockApi.getStudentsData(targetId);
+		const studentsData = await MockApi.getStudentsData(chosenGroupId);
 		chosenGroup.students = studentsData;
 	}
 
 	clearStunentsContainer();
 
-	let studentOrder = 0;
 	chosenGroup.students.forEach((student) => {
-		studentOrder += 1;
-		renderStudent(student, studentOrder);
+		const studentOrder = chosenGroup.students.indexOf(student);
+
+		renderStudent(student, studentOrder + 1);
 	});
 }
 
-function confirmDeletion(targetId) {
+function confirmDeletion(target, targetClass) {
 	showConfirmationModal();
 
 	const confirmationForm = document.getElementById('confirmationForm');
@@ -74,20 +91,35 @@ function confirmDeletion(targetId) {
 	const CANCEL_BUTTON_CLASS = 'form__cancel-button';
 
 	confirmationForm.addEventListener('click', (e) => {
-		if (e.target.classList.contains(DELETE_BUTTON_CLASS)) {
-			closeForm();
+		if (
+			e.target.classList.contains(DELETE_BUTTON_CLASS) &&
+			targetClass === GROUP_CLASS
+		) {
+			const targetId = target.closest('.groups__group').dataset.id;
+			deleteGroup(targetId);
+		}
 
-			MockApi.deleteGroup(targetId);
-
-			JournalData.deleteGroup(targetId);
-
-			deleteGroupEl(targetId);
+		if (
+			e.target.classList.contains(DELETE_BUTTON_CLASS) &&
+			targetClass === STUDENT_CLASS
+		) {
+			deleteStudent(target);
 		}
 
 		if (e.target.classList.contains(CANCEL_BUTTON_CLASS)) {
 			closeForm();
 		}
 	});
+}
+
+function deleteGroup(targetId) {
+	closeForm();
+
+	MockApi.deleteGroup(targetId);
+
+	JournalData.deleteGroup(targetId);
+
+	deleteGroupEl(targetId);
 }
 
 export function onGroupAddButtonClick() {
@@ -104,14 +136,14 @@ function onAddingFormSubmit(e) {
 
 	const formData = new FormData(this);
 
-	const GROUP_ADD_FORM_CLASS = 'group-form';
-	const STUDENT_ADD_FORM_CLASS = 'student-form';
+	const ADD_GROUP_FORM_CLASS = 'group-form';
+	const ADD_STUDENT_FORM_CLASS = 'student-form';
 
-	if (this.classList.contains(GROUP_ADD_FORM_CLASS)) {
+	if (this.classList.contains(ADD_GROUP_FORM_CLASS)) {
 		addGroup(formData);
 	}
 
-	if (this.classList.contains(STUDENT_ADD_FORM_CLASS)) {
+	if (this.classList.contains(ADD_STUDENT_FORM_CLASS)) {
 		addStudent(formData);
 	}
 }
@@ -131,17 +163,41 @@ async function addGroup(formData) {
 
 	closeForm();
 
-	JournalData.data.push(newGroup);
+	JournalData.addGroup(newGroup);
 
 	renderGroup(newGroup);
 }
 
-function addStudent(formData) {
-	const newStudent = {};
-	for (let [key, value] of formData.entries()) {
-		newStudent[key] = value;
+async function addStudent(formData) {
+	const preaparedStudent = prepareNewStudent(formData);
+
+	if (preaparedStudent) {
+		const newStudent = await MockApi.createStudent(preaparedStudent);
+
+		closeForm();
+
+		JournalData.addStudent(newStudent);
+
+		renderStudent(newStudent, JournalData.getStudentsIndex(newStudent) + 1);
+
+		showGroupInfo();
 	}
-	newStudent.groupId = JournalData.renderedGroupId;
+}
+
+function prepareNewStudent(formData) {
+	const newStudent = {};
+
+	for (let [key, value] of formData.entries()) {
+		if (key === 'marks') {
+			newStudent[key] = value.split(',');
+		} else {
+			newStudent[key] = value;
+		}
+	}
+
+	newStudent.groupId = newStudent.groupId
+		? newStudent.groupId
+		: JournalData.chosenGroupId;
 
 	const validationResult = validateStudentObject(newStudent);
 
@@ -149,7 +205,10 @@ function addStudent(formData) {
 
 	if (Object.getOwnPropertyNames(validationResult).length) {
 		showErrorModals(validationResult);
+		return null;
 	}
+
+	return newStudent;
 }
 
 function onFormClick(e) {
@@ -169,16 +228,18 @@ export function doSearch(e) {
 	const formData = new FormData(this);
 
 	const GROUP_SEARCH_FORM_CLASS = 'groups__search-block';
-	const STUDENT_SEARCH_FORM_CLASS = 'group__search-block';
+	const isGroupSearch = e.target.classList.contains(GROUP_SEARCH_FORM_CLASS);
 
-	if (e.target.classList.contains(GROUP_SEARCH_FORM_CLASS)) {
+	if (isGroupSearch) {
 		doGroupSearch(formData);
 	}
 
-	if (
+	const STUDENT_SEARCH_FORM_CLASS = 'group__search-block';
+	const isStudentSearch =
 		e.target.classList.contains(STUDENT_SEARCH_FORM_CLASS) &&
-		JournalData.renderedGroupId
-	) {
+		JournalData.chosenGroupId;
+
+	if (isStudentSearch) {
 		doStudentSearch(formData);
 	}
 }
@@ -202,17 +263,13 @@ function doStudentSearch(formData) {
 
 	const studentToSearch = formData.get(STUDENT_SEARCH_INPUT_NAME);
 
-	const neenedGroup = JournalData.data.find(
-		(group) => group.id === JournalData.renderedGroupId,
-	);
+	const neenedGroup = JournalData.getChosenGroup();
 
 	clearStunentsContainer();
 
-	let studentOrder = 0;
 	neenedGroup.students.forEach((student) => {
 		if (student.surname.includes(studentToSearch)) {
-			studentOrder += 1;
-			renderStudent(student, studentOrder);
+			renderStudent(student, JournalData.getStudentsIndex(student) + 1);
 		}
 	});
 }
@@ -239,7 +296,7 @@ export function resetSearchResuts(e) {
 		clearStunentsContainer();
 
 		const neenedGroup = JournalData.data.find(
-			(group) => group.id === JournalData.renderedGroupId,
+			(group) => group.id === JournalData.chosenGroupId,
 		);
 
 		let studentOrder = 0;
@@ -251,7 +308,7 @@ export function resetSearchResuts(e) {
 }
 
 export function onStudentAddButtonClick() {
-	if (!JournalData.renderedGroupId) {
+	if (!JournalData.chosenGroupId) {
 		stopAdding();
 		return;
 	}
@@ -270,4 +327,103 @@ function stopAdding() {
 	const confirmationForm = document.getElementById('confirmationForm');
 
 	confirmationForm.addEventListener('click', onFormClick);
+}
+
+export function onStudentsContainerClick(e) {
+	e.stopPropagation();
+
+	if (e.target.classList.contains(STUDENT_DELETE_BUTTON_CLASS)) {
+		const chosenStudent = e.target.closest('.student');
+		confirmDeletion(chosenStudent, STUDENT_CLASS);
+		return;
+	}
+
+	//TODO find better solution then two conditions
+
+	if (
+		e.target.classList.contains(STUDENT_CLASS) ||
+		e.target.parentNode.classList.contains(STUDENT_CLASS)
+	) {
+		const targetId = e.target.dataset.id
+			? e.target.dataset.id
+			: e.target.parentNode.dataset.id;
+
+		changeStudent(targetId);
+	}
+	const ADD_MARK_BUTTON_CLASS = 'student__add-button';
+
+	if (e.target.classList.contains(ADD_MARK_BUTTON_CLASS)) {
+		const target = e.target;
+
+		const newMark = target.previousElementSibling.value;
+
+		const studentId = target.closest('.student').dataset.id;
+
+		addMark(newMark, studentId);
+	}
+}
+
+function addMark(newMark, studentId) {
+	if (newMark && newMark !== '0' && newMark <= 12) {
+		const student = JournalData.getStudent(studentId);
+
+		student.marks.push(newMark);
+
+		reRenderStudent(student, JournalData.getStudentsIndex(student));
+
+		MockApi.changeStudent(student);
+	}
+}
+
+function changeStudent(targetId) {
+	showStudentEditModal(targetId);
+
+	const changingForm = document.getElementById('changingForm');
+
+	changingForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+
+		const formData = new FormData(changingForm);
+		onChangingFormSubmit(formData, targetId);
+	});
+
+	changingForm.addEventListener('click', onFormClick);
+}
+
+function onChangingFormSubmit(formData, targetId) {
+	const changedStudentData = prepareNewStudent(formData);
+
+	if (changedStudentData) {
+		const changedStudent = JournalData.changeStudent(
+			targetId,
+			changedStudentData,
+		);
+
+		reRenderStudent(
+			changedStudent,
+			JournalData.getStudentsIndex(changedStudent) + 1,
+		);
+
+		closeForm();
+
+		showGroupInfo();
+
+		MockApi.changeStudent(changedStudent);
+	}
+}
+
+function deleteStudent(chosenStudent) {
+	const chosenStudentId = chosenStudent.dataset.id;
+
+	MockApi.deleteStudent(chosenStudentId);
+
+	chosenStudent.remove();
+
+	JournalData.deleteStudent(chosenStudentId);
+
+	renderData(JournalData.chosenGroupId);
+
+	showGroupInfo();
+
+	closeForm();
 }

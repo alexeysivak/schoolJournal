@@ -2,9 +2,8 @@ import JournalData from '../data/JournalData';
 import {
 	groupNameError,
 	groupNameNotUnique,
-	nameError,
+	emptyInputError,
 	marksError,
-	studentNameIsNotUnique,
 } from '../templates/temlates';
 
 export function validateAddGroupData(formGroupName) {
@@ -34,7 +33,7 @@ class StudentDataValidation {
 
 	name = (value, key) => {
 		if (!value.trim()) {
-			this.invalidFields[key] = nameError;
+			this.invalidFields[key] = emptyInputError;
 			return;
 		}
 
@@ -47,7 +46,7 @@ class StudentDataValidation {
 
 	surname = (value, key) => {
 		if (!value.trim()) {
-			this.invalidFields[key] = nameError;
+			this.invalidFields[key] = emptyInputError;
 			return;
 		}
 
@@ -59,9 +58,16 @@ class StudentDataValidation {
 	};
 
 	marks = (value, key) => {
-		const marks = value.split(',');
+		const firstMark = value[0];
 
-		const wrongToken = marks.filter((mark) => isNaN(+mark) || +mark === 0);
+		if (!firstMark.trim()) {
+			this.invalidFields[key] = emptyInputError;
+			return;
+		}
+
+		const wrongToken = value.filter(
+			(mark) => isNaN(+mark) || +mark === 0 || +mark > 12,
+		);
 
 		if (wrongToken.length) {
 			this.invalidFields[key] = marksError;
@@ -70,24 +76,6 @@ class StudentDataValidation {
 
 		if (this.invalidFields[key]) {
 			delete this.invalidFields[key];
-		}
-	};
-
-	fullName = () => {
-		const fullStudentName = `${this.studentName} ${this.studentSurname}`;
-
-		const groupToMatch = JournalData.data.find(
-			(group) => group.id === JournalData.renderedGroupId,
-		);
-		const isStudentNotUnique = groupToMatch.students.find(
-			(student) =>
-				`${student.name} ${student.surname}` === fullStudentName,
-		);
-
-		if (isStudentNotUnique) {
-			const wrongFieldName = 'surname';
-
-			this.invalidFields[wrongFieldName] = studentNameIsNotUnique;
 		}
 	};
 }
@@ -103,12 +91,6 @@ export function validateStudentObject(newStudent) {
 
 			validationMethod(valueToValidate, key);
 		}
-	}
-
-	if (
-		!Object.getOwnPropertyNames(studentDataValidation.invalidFields).length
-	) {
-		studentDataValidation.fullName();
 	}
 
 	return studentDataValidation.invalidFields;

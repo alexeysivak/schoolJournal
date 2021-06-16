@@ -21,3 +21,4 @@ export function closeForm() {
 
 	formContainer.remove();
 }
+

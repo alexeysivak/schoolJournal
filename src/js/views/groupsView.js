@@ -4,8 +4,10 @@ import {
 	groupDeletionConfirmation,
 	addStudentFormTemplate,
 	addStudentForbiddanceTemplate,
+	getStudentEditionModalTemplate,
 } from '../templates/temlates';
 import { mainContainer, groupsContainer, studentsContainer } from '../main';
+import JournalData from '../data/JournalData';
 
 export function renderGroup(group) {
 	groupsContainer.insertAdjacentHTML('beforeend', getGroupTemplate(group));
@@ -43,7 +45,6 @@ export function showForbiddanceModal() {
 }
 
 export function showErrorModals(validationResult) {
-	
 	for (let key in validationResult) {
 		const errorField = document.querySelector(`[name = ${key}]`);
 
@@ -53,7 +54,7 @@ export function showErrorModals(validationResult) {
 
 export function clearModalErrors() {
 	const errors = document.querySelectorAll('.error-message');
-	 
+
 	if (errors.length) {
 		Array.from(errors).forEach((error) => error.remove());
 	}
@@ -61,4 +62,13 @@ export function clearModalErrors() {
 
 export function showConfirmationModal() {
 	mainContainer.insertAdjacentHTML('beforeend', groupDeletionConfirmation);
+}
+
+export function showStudentEditModal(id) {
+	const neededStudent = JournalData.getStudent(id);
+
+	mainContainer.insertAdjacentHTML(
+		'beforeend',
+		getStudentEditionModalTemplate(neededStudent),
+	);
 }

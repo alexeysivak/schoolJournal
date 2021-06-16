@@ -1,3 +1,5 @@
+import JournalData from './data/JournalData';
+
 const BASE_URL =
 	'https://60bdf540ace4d50017aabe0c.mockapi.io/school_journal/groups';
 
@@ -56,6 +58,54 @@ class MockApi {
 		const response = await fetch(url, options).then((data) => data.json());
 
 		return response;
+	}
+
+	async createStudent(newStudent) {
+		const CURRANT_GROUP_ID = JournalData.chosenGroupId;
+
+		const url = `${BASE_URL}/${CURRANT_GROUP_ID}/students`;
+		const options = {
+			method: 'POST',
+			body: JSON.stringify(newStudent),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const response = await fetch(url, options).then((data) => data.json());
+
+		return response;
+	}
+
+	deleteStudent(id) {
+		const CURRANT_GROUP_ID = JournalData.chosenGroupId;
+
+		const url = `${BASE_URL}/${CURRANT_GROUP_ID}/students/${id}`;
+
+		const options = {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		fetch(url, options);
+	}
+
+	changeStudent(student) {
+		const CURRANT_GROUP_ID = JournalData.chosenGroupId;
+
+		const url = `${BASE_URL}/${CURRANT_GROUP_ID}/students/${student.id}`;
+
+		const options = {
+			method: 'PUT',
+			body: JSON.stringify(student),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const response = fetch(url, options).then((data) => data.json());
 	}
 }
 
