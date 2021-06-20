@@ -34,7 +34,7 @@ module.exports = {
 		extensions: ['.js', '.json'],
 	},
 
-	optimization: getOptimizationSettings(),
+	//optimization: getOptimizationSettings(),
 
 	plugins: [
 		new HTMLWebpackPlugin({

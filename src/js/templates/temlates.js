@@ -1,7 +1,24 @@
-export function getStudentTemplate(
-	{ id, name, surname, marks },
-	studentsOrder,
-) {
+/**
+ * entities templates
+ */
+export function getGroupTemplate(group) {
+	return `
+    <div class="groups__group" data-id=${group.id}>
+        <span>${group.name}</span>
+        <button type="button" class="groups__delete-button" id="groupDeleteButton">
+            &#10005;
+        </button>
+    </div>`;
+}
+
+export function getGroupInfoTemplate(averageMark, gropName) {
+	return `
+    <span>${gropName}</span>:
+    <span>${averageMark}</span>
+    `;
+}
+
+export function getStudentTemplate({ id, name, surname, marks }, studentsOrder) {
 	let averageMark;
 
 	if (marks[0]) {
@@ -34,9 +51,48 @@ export function getStudentTemplate(
     </div>`;
 }
 
+/**
+ * modals templates
+ */
+export const addGroupFormTemplate = `
+ <section class="modal-section" id="modalContainer"> 
+     <form class="group-form form" id="addingForm">
+     <button type="button" class="form__close-button">&#10005;</button>
+         <fieldset class="form-fieldset">
+             <input
+                 type="text"
+                 class="form-input"
+                 id="groupName"
+                 placeholder="Enter group name"
+                 name="groupName"
+             />
+
+         </fieldset>
+         <button type="submit" class="form-button" id="creationSubmitBtn">
+             Submit
+         </button>
+     </form>
+ </section>`;
+
+export function getStudentInfoModalTemplate({ name, surname, marks }) {
+	return `
+    <section class="modal-section" id="modalContainer"> 
+    <div class="info-block" id="studentInfoBlock">
+    <button type="button" class="form__close-button">&#10005;</button>
+        <div class="info-block__content">
+            <p>${name} ${surname}</p>
+             <div>${marks}</div>
+        </div>
+        <button type="button" class="info-block__button" id="studentEditBtn">
+            Edit
+        </button>
+    </div>
+</section>`;
+}
+
 export function getStudentEditionModalTemplate({ name, surname, marks }) {
 	return `
-    <section class="form-section" id="formContainer"> 
+    <section class="modal-section" id="modalContainer"> 
     <form class="student-form form" id="changingForm">
     <button type="button" class="form__close-button">&#10005;</button>
         <fieldset class="form-fieldset">
@@ -72,45 +128,8 @@ export function getStudentEditionModalTemplate({ name, surname, marks }) {
 </section>`;
 }
 
-export function getGroupTemplate(group) {
-	return `
-    <div class="groups__group" data-id=${group.id}>
-        <span>${group.name}</span>
-        <button type="button" class="groups__delete-button" id="groupDeleteButton">
-            &#10005;
-        </button>
-    </div>`;
-}
-
-export function getGroupInfoTemplate(averageMark, gropName) {
-	return `
-    <span>${gropName}</span>:
-    <span>${averageMark}</span>
-    `;
-}
-
-export const creationFormTemplate = `
-    <section class="form-section" id="formContainer"> 
-        <form class="group-form form" id="addingForm">
-        <button type="button" class="form__close-button">&#10005;</button>
-            <fieldset class="form-fieldset">
-                <input
-                    type="text"
-                    class="form-input"
-                    id="groupName"
-                    placeholder="Enter group name"
-                    name="groupName"
-                />
- 
-            </fieldset>
-            <button type="submit" class="form-button" id="creationSubmitBtn">
-                Submit
-            </button>
-        </form>
-    </section>`;
-
 export const addStudentFormTemplate = `
-    <section class="form-section" id="formContainer"> 
+    <section class="modal-section" id="modalContainer"> 
         <form class="student-form form" id="addingForm">
         <button type="button" class="form__close-button">&#10005;</button>
             <fieldset class="form-fieldset">
@@ -142,24 +161,16 @@ export const addStudentFormTemplate = `
         </form>
     </section>`;
 
-export const emptyInputError = `<p class="error-message">This input can\`t be empty</p>`;
-
-export const marksError = `<p class="error-message">Enter only digits from 1 to 12 in a next format: 1,2,3,4,5...</p>`;
-
 export const addStudentForbiddanceTemplate = `
-    <section class="form-section" id="formContainer"> 
+    <section class="modal-section" id="modalContainer"> 
         <form class="form" id="confirmationForm">
         <button type="button" class="form__close-button">&#10005;</button> 
         <p class="form__confrimation-question">You should choose group before creating student</p> 
         </form>
     </section>`;
 
-export const groupNameError = `<p class="error-message">name should includes one capital letter and number whithout white space (A2, B238, ...)</p>`;
-
-export const groupNameNotUnique = `<p class="error-message">entered name already used</p>`;
-
-export const groupDeletionConfirmation = `
-<section class="form-section" id="formContainer"> 
+export const deletionConfirmationModal = `
+<section class="modal-section" id="modalContainer"> 
 <form class="form" id="confirmationForm">  
         <p class="form__confrimation-question">Are you sure?</p> 
     <button type="button" class="form__delete-button" id="deleteGroup">
@@ -169,4 +180,30 @@ export const groupDeletionConfirmation = `
         Cancel
     </button>
 </form>
+</section>`;
+
+/**
+ * errors templates
+ */
+
+export const groupNameError = `<p class="error-message">name should includes one capital letter and number whithout white space (A2, B238, ...)</p>`;
+
+export const groupNameNotUnique = `<p class="error-message">entered name already used</p>`;
+
+export const emptyInputError = `<p class="error-message">This input can\`t be empty</p>`;
+
+export const marksError = `<p class="error-message">Enter only digits from 1 to 12 in a next format: 1,2,3,4,5...</p>`;
+
+export const appErrorModal = `
+<section class="modal-section" id="modalContainer"> 
+    <div class="error-block" id="errorBlock">
+    <button type="button" class="form__close-button">&#10005;</button> 
+    <div class="error-content">
+    <h2>Sorry(</h2>
+        <p>Something went wrong.</p>
+        <p>Please check an internet conection and reload the page.</p>
+        <p>Contact us if it doesn\`t work.</p>
+        <p>+1 111 111 11 11</p>
+        </div> 
+    </div>
 </section>`;

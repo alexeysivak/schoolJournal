@@ -1,13 +1,6 @@
-import {
-	getGroupTemplate,
-	creationFormTemplate,
-	groupDeletionConfirmation,
-	addStudentFormTemplate,
-	addStudentForbiddanceTemplate,
-	getStudentEditionModalTemplate,
-} from '../templates/temlates';
-import { mainContainer, groupsContainer, studentsContainer } from '../main';
+import { groupsContainer, studentsContainer, groupInfoBlock } from '../main';
 import JournalData from '../data/JournalData';
+import { getGroupInfoTemplate, getGroupTemplate } from '../templates/temlates';
 
 export function renderGroup(group) {
 	groupsContainer.insertAdjacentHTML('beforeend', getGroupTemplate(group));
@@ -22,53 +15,17 @@ export function clearStunentsContainer() {
 }
 
 export function deleteGroupEl(groupId) {
-	const groupEl = document.querySelector(
-		`.groups__group[data-id="${groupId}"]`,
-	);
+	const groupEl = document.querySelector(`.groups__group[data-id="${groupId}"]`);
 
 	groupEl.remove();
 }
 
-export function showGroupNameModal() {
-	mainContainer.insertAdjacentHTML('beforeend', creationFormTemplate);
-}
+export function renderGroupInfo() {
+	groupInfoBlock.innerHTML = null;
 
-export function showAddStudentModal() {
-	mainContainer.insertAdjacentHTML('beforeend', addStudentFormTemplate);
-}
+	const averageMark = JournalData.getGroupAveregeMark();
+	const groupName = JournalData.chosenGroup.name;
 
-export function showForbiddanceModal() {
-	mainContainer.insertAdjacentHTML(
-		'beforeend',
-		addStudentForbiddanceTemplate,
-	);
-}
-
-export function showErrorModals(validationResult) {
-	for (let key in validationResult) {
-		const errorField = document.querySelector(`[name = ${key}]`);
-
-		errorField.insertAdjacentHTML('afterend', validationResult[key]);
-	}
-}
-
-export function clearModalErrors() {
-	const errors = document.querySelectorAll('.error-message');
-
-	if (errors.length) {
-		Array.from(errors).forEach((error) => error.remove());
-	}
-}
-
-export function showConfirmationModal() {
-	mainContainer.insertAdjacentHTML('beforeend', groupDeletionConfirmation);
-}
-
-export function showStudentEditModal(id) {
-	const neededStudent = JournalData.getStudent(id);
-
-	mainContainer.insertAdjacentHTML(
-		'beforeend',
-		getStudentEditionModalTemplate(neededStudent),
-	);
+	const groupInfoTemplate = getGroupInfoTemplate(averageMark, groupName);
+	groupInfoBlock.insertAdjacentHTML('afterbegin', groupInfoTemplate);
 }

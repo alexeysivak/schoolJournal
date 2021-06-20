@@ -1,8 +1,9 @@
 import {
 	getStudentTemplate,
-	getGroupInfoTemplate,
+
 } from '../templates/temlates';
-import { studentsContainer, groupInfoBlock } from '../main';
+
+import { studentsContainer} from '../main';
 
 export function renderStudent(student, studentOrder) {
 	studentsContainer.insertAdjacentHTML(
@@ -11,12 +12,6 @@ export function renderStudent(student, studentOrder) {
 	);
 }
 
-export function renderGroupInfo(averageMark, gropName) {
-	groupInfoBlock.innerHTML = null;
-
-	const groupInfoTemplate = getGroupInfoTemplate(averageMark, gropName);
-	groupInfoBlock.insertAdjacentHTML('afterbegin', groupInfoTemplate);
-}
 
 export function reRenderStudent(student, studentOrder) {
 	const changedStudentTemplate = getStudentTemplate(student, studentOrder);
@@ -26,4 +21,8 @@ export function reRenderStudent(student, studentOrder) {
 	);
 
 	studentToChangeEl.outerHTML = changedStudentTemplate;
+}
+
+export function clearStunentsContainer() {
+	studentsContainer.innerHTML = null;
 }

@@ -1,37 +1,20 @@
 import JournalData from './data/JournalData';
 
-const BASE_URL =
-	'https://60bdf540ace4d50017aabe0c.mockapi.io/school_journal/groups';
+const BASE_URL = 'https://60bdf540ace4d50017aabe0c.mockapi.io/school_journal/groups';
 
 class MockApi {
 	constructor() {
 		this.groups = this.getGroupsData();
 	}
 
-	async getGroupsData() {
-		const groupsData = await fetch(BASE_URL).then((response) =>
-			response.json(),
-		);
-
-		return groupsData;
+	getGroupsData() {
+		return this.doFetch(BASE_URL);
 	}
 
-	async getGroupData(groupId) {
-		const groupData = await fetch(`${BASE_URL}/${groupId}`).then(
-			(response) => response.json(),
-		);
+	getGroupData(groupId) {
+		const url = `${BASE_URL}/${groupId}`;
 
-		return groupData;
-	}
-
-	async getStudentsData(groupId) {
-		const GROUP_STUDENTS = `${BASE_URL}/${groupId}/students`;
-
-		const groupData = await fetch(GROUP_STUDENTS).then((response) =>
-			response.json(),
-		);
-
-		return groupData;
+		return this.doFetch(url);
 	}
 
 	deleteGroup(groupId) {
@@ -42,10 +25,11 @@ class MockApi {
 				'Content-Type': 'application/json',
 			},
 		};
-		fetch(url, options);
+
+		return this.doFetch(url, options);
 	}
 
-	async createGroup(groupName) {
+	createGroup(groupName) {
 		const url = `${BASE_URL}`;
 		const options = {
 			method: 'POST',
@@ -55,12 +39,16 @@ class MockApi {
 			},
 		};
 
-		const response = await fetch(url, options).then((data) => data.json());
-
-		return response;
+		return this.doFetch(url, options);
 	}
 
-	async createStudent(newStudent) {
+	async getStudentsData(groupId) {
+		const url = `${BASE_URL}/${groupId}/students`;
+
+		return this.doFetch(url);
+	}
+
+	createStudent(newStudent) {
 		const CURRANT_GROUP_ID = JournalData.chosenGroupId;
 
 		const url = `${BASE_URL}/${CURRANT_GROUP_ID}/students`;
@@ -72,9 +60,7 @@ class MockApi {
 			},
 		};
 
-		const response = await fetch(url, options).then((data) => data.json());
-
-		return response;
+		return this.doFetch(url, options);
 	}
 
 	deleteStudent(id) {
@@ -89,7 +75,7 @@ class MockApi {
 			},
 		};
 
-		fetch(url, options);
+		return this.doFetch(url, options);
 	}
 
 	changeStudent(student) {
@@ -105,7 +91,27 @@ class MockApi {
 			},
 		};
 
-		const response = fetch(url, options).then((data) => data.json());
+		return this.doFetch(url, options);
+	}
+
+	async doFetch(url, options) {
+		if (options) {
+			return await fetch(url, options).then((response) => {
+				if (!response.ok) {
+					throw new Error('response is not ok');
+				}
+
+				return response.json();
+			});
+		}
+
+		return await fetch(url).then((response) => {
+			if (!response.ok) {
+				throw new Error('response is not ok');
+			}
+
+			return response.json();
+		});
 	}
 }
 

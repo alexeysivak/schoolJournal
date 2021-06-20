@@ -62,12 +62,15 @@ export class JournalData {
 			(acc, student) => acc.concat(student.marks),
 			[],
 		);
+		if (groupsMarks[0]) {
+			const averageMark =
+				groupsMarks.reduce((acc, mark) => (acc += +mark), 0) /
+				groupsMarks.length;
 
-		const averageMark =
-			groupsMarks.reduce((acc, mark) => (acc += +mark), 0) /
-			groupsMarks.length;
+			return Math.ceil(averageMark * 100) / 100;
+		}
 
-		return Math.ceil(averageMark * 100) / 100;
+		return '';
 	}
 }
 
