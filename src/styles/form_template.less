@@ -10,6 +10,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 100;
 }
 
 .info-block,
@@ -121,4 +122,28 @@
 	color: @warning-color;
 	text-align: center;
 	margin: 0;
+}
+
+@media screen and (max-width: 886px) {
+	.info-block,
+	.error-block,
+	.form {
+		width: 50%;
+		background-color: @secondaty-background-color;
+		border-radius: 10px;
+		padding: 0.5% 1.5% 1.5% 1.5%;
+		text-align: right;
+	}
+}
+
+@media screen and (max-width: 576px) {
+	.info-block,
+	.error-block,
+	.form {
+		width: 90%;
+		background-color: @secondaty-background-color;
+		border-radius: 10px;
+		padding: 0.5% 1.5% 1.5% 1.5%;
+		text-align: right;
+	}
 }
