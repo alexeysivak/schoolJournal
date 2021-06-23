@@ -14,10 +14,7 @@ function getOptimizationSettings() {
 	};
 
 	if (isProd) {
-		settings.minimizer = [
-			new TerserWebpackPlugin(),
-			new CssMinimizerPlugin(),
-		];
+		settings.minimizer = [new TerserWebpackPlugin(), new CssMinimizerPlugin()];
 	}
 
 	return settings;
@@ -34,7 +31,7 @@ module.exports = {
 		extensions: ['.js', '.json'],
 	},
 
-	//optimization: getOptimizationSettings(),
+	optimization: getOptimizationSettings(),
 
 	plugins: [
 		new HTMLWebpackPlugin({
