@@ -17,7 +17,7 @@ import { addMark } from './controllers/studentsController';
 
 import { renderGroup, clearGroupsContainer, renderGroupInfo } from './views/groupsView';
 
-import { renderStudent, clearStunentsContainer } from './views/studentView';
+import { renderStudent, clearStunentsContainer, showTempError } from './views/studentView';
 
 import {
 	showConfirmationModal,
@@ -167,11 +167,19 @@ function onStudentsContainerClick(e) {
 	}
 
 	if (TargetDefiner.isAddMarkBtn(target)) {
-		const newMark = target.previousElementSibling.value;
+		onAddMarkBtnClick(target);
+	}
+}
 
-		const studentId = target.closest('.student').dataset.id;
+function onAddMarkBtnClick(target) {
+	const newMark = target.previousElementSibling.value;
 
+	const studentId = target.closest('.student').dataset.id;
+
+	if (newMark && newMark !== '0' && newMark <= 12) {
 		addMark(newMark, studentId);
+	} else {
+		showTempError(target.previousElementSibling);
 	}
 }
 

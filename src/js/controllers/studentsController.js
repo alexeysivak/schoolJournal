@@ -87,26 +87,24 @@ function prepareNewStudent(formData) {
 }
 
 export async function addMark(newMark, studentId) {
-	if (newMark && newMark !== '0' && newMark <= 12) {
-		const student = JournalData.getStudent(studentId);
+	const student = JournalData.getStudent(studentId);
 
-		try {
-			await MockApi.changeStudent(student);
-		} catch (e) {
-			showAppError();
-			listenErrorModal();
+	try {
+		await MockApi.changeStudent(student);
+	} catch (e) {
+		showAppError();
+		listenErrorModal();
 
-			console.error(e);
-			console.log('file: studentController', 'changeStudent()');
-			return;
-		}
-
-		student.marks.push(newMark);
-
-		reRenderStudent(student, JournalData.getStudentsIndex(student));
-
-		renderGroupInfo();
+		console.error(e);
+		console.log('file: studentController', 'changeStudent()');
+		return;
 	}
+
+	student.marks.push(newMark);
+
+	reRenderStudent(student, JournalData.getStudentsIndex(student));
+
+	renderGroupInfo();
 }
 
 export async function deleteStudent(chosenStudent) {
